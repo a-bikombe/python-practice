@@ -1,32 +1,22 @@
-"""
-ROCK POUNDS OUT FIRE, CRUSHES SCISSORS & SPONGE.
-FIRE MELTS SCISSORS, BURNS PAPER & SPONGE.
-SCISSORS SWISH THROUGH AIR, CUT PAPER & SPONGE.
-SPONGE SOAKS PAPER, USES AIR POCKETS, ABSORBS WATER.
-PAPER FANS AIR, COVERS ROCK, FLOATS ON WATER.
-AIR BLOWS OUT FIRE, ERODES ROCK, EVAPORATES WATER.
-WATER ERODES ROCK, PUTS OUT FIRE, RUSTS SCISSORS.
-"""
-
 import random
 
 # Response: [Items that the response defeats]
 game_rules = {
-	'Rock': ['Fire', 'Scissors', 'Sponge'],
-	'Paper': ['Air', 'Rock', 'Water'],
-	'Scissors': ['Air', 'Paper', 'Sponge'],
-	'Fire': ['Scissors', 'Paper', 'Sponge'],
-	'Sponge': ['Paper', 'Air', 'Water'],
-	'Air': ['Fire', 'Rock', 'Water'],
-	'Water': ['Rock', 'Fire', 'Scissors']
+	'Rock': ['pounds out Fire', 'crushes Scissors', 'crushes Sponge'],
+	'Paper': ['fans Air', 'covers Rock', 'floats on Water'],
+	'Scissors': ['swish through Air', 'cut Paper', 'cut Sponge'],
+	'Fire': ['melts Scissors', 'burns Paper', 'burns Sponge'],
+	'Sponge': ['soaks Paper', 'uses Air pockets', 'absorbs Water'],
+	'Air': ['blows out Fire', 'erodes Rock', 'evaporates Water'],
+	'Water': ['erodes Rock', 'puts out Fire', 'rusts Scissors']
 }
 
 # asks for user's input of what item they want to play
 def user_input():
-	response = input("Rock, Paper, Scissors, Fire, Sponge, Air, Water? ")
-	validate_user_response(response)
+	user_response = input("Rock, Paper, Scissors, Fire, Sponge, Air, Water? ")
+	get_user_response(user_response)
 
-def validate_user_response(user_response):
+def get_user_response(user_response):
 	match user_response.title():
 		case 'Rock':
 			result('Rock')
@@ -47,7 +37,6 @@ def validate_user_response(user_response):
 			user_input()
 
 def get_computer_response():
-	# picks a random number from 1 to 7, including 1 and 7, and assigns it to the variable 'rando'. You can use this to select one of the elements for a version where you play the computer.
 	computer_number = random.randint(1,7)
 	computer_reponse = 'No Response Yet'
 
@@ -72,34 +61,56 @@ def get_computer_response():
 	print('I entered', computer_reponse)
 	return computer_reponse
 
+def check_tie(user_response, computer_response):
+	if user_response == computer_response:
+		print('Tie. Try Again.')
+		return True
+	else:
+		return False
+
 def match_to_rules(game_rules, your_item, computer_item):
 	# loop through game rules to find your item
-	for your_item_search in game_rules.keys():
+	for your_item_key in game_rules.keys():
 		# once you find your item
-		if your_item == your_item_search:
+		if your_item == your_item_key:
 			# loop through items that your item defeats
-			for computer_item_search in game_rules.get(your_item_search):
+			for computer_item_value in game_rules.get(your_item_key):
 				# if the computer's item is under the list
-				if computer_item == computer_item_search:
+				if computer_item in computer_item_value:
 					# print out that it defeats computer
-					print(your_item, 'defeats', computer_item, '. You win.')
-				else:
-					for computer_item_search in game_rules.keys():
-						# once you find computer's item
-						if computer_item == computer_item_search:
-							# loop through items that your computer's item defeats
-							for your_item_search in game_rules.get(computer_item_search):
-								# if your item is under the list
-								if your_item == your_item_search:
-									# print out that it defeats you
-									print(computer_item, 'defeats', your_item, '. I win!')
-	
-	# What happens if you tie? Is there a way to tie?
+					print(your_item, computer_item_value, '. You win.')
 
-def result(response_to_analyze):
-	print('You entered', response_to_analyze)
+	for computer_item_key in game_rules.keys():
+		# once you find computer's item
+		if computer_item == computer_item_key:
+			# loop through items that your computer's item defeats
+			for your_item_value in game_rules.get(computer_item_key):
+				# if your item is under the list
+				if your_item in your_item_value:
+					# print out that it defeats you
+					print(computer_item, your_item_value, '. I win!')
+
+def play_again():
+	play_again = input('Play again? Y/N: ')
+
+	if play_again.title() == 'Y':
+		user_input()
+	elif play_again.title() == 'N':
+		print('Thank you for playing!')
+	else:
+		print('Invalid. Goodbye.')
+
+def result(user_response):
+	print('You entered', user_response)
+
 	computer_response = get_computer_response()
-	match_to_rules(game_rules, response_to_analyze, computer_response)
+
+	if check_tie(user_response, computer_response) == False:
+		match_to_rules(game_rules, user_response, computer_response)
+	else:
+		user_input()
+
+	play_again()
 
 def main():
 	user_input()
@@ -107,5 +118,5 @@ def main():
 if __name__ == "__main__":
     main()
 
-# Clean up
 # Add Pi annunciators
+# Comments
